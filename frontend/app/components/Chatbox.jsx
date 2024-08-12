@@ -18,7 +18,6 @@ import axios from "axios";
 export default function Home() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [response, setResponse] = useState("");
 
   const handleSend = () => {
     if (input.trim()) {
@@ -62,7 +61,7 @@ export default function Home() {
   };
 
   return (
-    <Container maxWidth="sm" style={{ marginTop: "2rem" }}>
+    <Container maxWidth="sm" >
       <Paper
         elevation={3}
         style={{
@@ -73,12 +72,12 @@ export default function Home() {
         }}
       >
         <Typography
-          className="bg-gray-300"
+          className=" text-black py-2 shadow-md bg-blue-50 rounded-t-lg"
           variant="h5"
           align="center"
           gutterBottom
-        >
-          Customer Service Chatbot
+        > 
+          ServBot AI
         </Typography>
         <Box style={{ flexGrow: 1, overflowY: "auto", marginBottom: "1rem" }}>
           <List>
