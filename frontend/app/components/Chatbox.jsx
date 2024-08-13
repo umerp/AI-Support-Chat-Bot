@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import {
   Container,
   Box,
@@ -15,9 +16,28 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
 
-export default function Home() {
+export default function Chatbox() {
+  const { data: session } = useSession(); // Fetch session using useSession hook
+
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+
+  // fetching chat history on render
+  useEffect(() => {
+    const fetchChatHistory = async () => {
+      if (session) {
+        try {
+          const res = await axios.get(`/api/chat/history?userId=${session.user.id}`);
+          setMessages(res.data.messages);
+        } catch (error) {
+          console.error("Error fetching chat history:", error);
+        }
+      }
+    };
+
+    fetchChatHistory();
+  }, [session]);
+
 
   const handleSend = () => {
     if (input.trim()) {
@@ -31,7 +51,7 @@ export default function Home() {
     try {
       const lastUserMessage = messages[messages.length - 1]?.text; // grabbing the last user message text
       if (lastUserMessage) {
-        const res = await axios.post(process.env.NEXT_PUBLIC_API_URL, {
+        const res = await axios.post('/api/sendMessage', {
           message: lastUserMessage,
         });
 
@@ -77,9 +97,9 @@ export default function Home() {
           align="center"
           gutterBottom
         > 
-          ServBot AI
+          Chat with ServBot
         </Typography>
-        <Box style={{ flexGrow: 1, overflowY: "auto", marginBottom: "1rem" }}>
+        <Box className='bg-gray-100 shadow-inner' style={{ flexGrow: 1, overflowY: "auto", marginBottom: "1rem" }}>
           <List>
             {messages.map((message, index) => (
               <ListItem key={index}>
