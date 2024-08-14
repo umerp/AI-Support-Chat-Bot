@@ -18,13 +18,12 @@ import axios from "axios";
 import { raleway } from "../fonts";
 import Image from "next/image";
 
-
 export default function Chatbox() {
   const { data: session } = useSession();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false); 
-  const [fetching, setFetching] = useState(true)
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
 
   // fetching chat history on render
   useEffect(() => {
@@ -50,8 +49,7 @@ export default function Chatbox() {
     } catch (error) {
       console.error("Error saving message:", error);
     }
-  }
-
+  };
 
   const handleSend = async () => {
     if (input.trim()) {
@@ -84,13 +82,12 @@ export default function Chatbox() {
       const lastUserMessage = messages[messages.length - 2]?.text; // grabbing the last user message text
       if (lastUserMessage) {
         console.log("Fetching response for message:", lastUserMessage);
-        const res = await axios.post('/api/sendMessage', {
+        const res = await axios.post("/api/sendMessage", {
           message: lastUserMessage,
         });
 
-
         const botReply = res.data.reply;
-        return botReply || "Sorry I couldn't process that."
+        return botReply || "Sorry I couldn't process that.";
       }
     } catch (error) {
       console.error("Error fetching response:", error);
@@ -109,7 +106,7 @@ export default function Chatbox() {
   };
 
   return (
-    <Container maxWidth="sm" >
+    <Container maxWidth="sm">
       <Paper
         elevation={3}
         style={{
@@ -124,48 +121,68 @@ export default function Chatbox() {
           variant="h5"
           align="center"
           gutterBottom
-        > 
+        >
           Chat with ServBot
         </Typography>
-        <Box className='bg-gray-100 shadow-inner' style={{ flexGrow: 1, overflowY: "auto", marginBottom: "1rem" }}>
+        <Box
+          className="bg-gray-100 shadow-inner"
+          style={{ flexGrow: 1, overflowY: "auto", marginBottom: "1rem" }}
+        >
           {fetching ? (
-              <div className="relative flex flex-col h-full justify-center items-center">
-                <Image src='/loader.svg' alt="Loading..." width={50} height={50} />
-                <p>Loading Conversation...</p>
-              </div>
-          ) : 
-          <List>
-            {messages.map((message, index) => (
-              <ListItem key={index}>
-                <Grid
-                  container
-                  spacing={2}
-                  justifyContent={
-                    message.type === "user" ? "flex-end" : "flex-start"
-                  }
-                >
-                  <Grid item xs={12} sm={8}>
-                    <Paper
-                      style={{
-                        padding: "0.5rem 1rem",
-                        backgroundColor:
-                          message.type === "user" ? "#1976d2" : "#ece7e7",
-                        color: message.type === "user" ? "#ffffff" : "#000",
-                        borderRadius: "20px",
-                      }}
+            <div className="relative flex flex-col h-full justify-center items-center">
+              <Image
+                src="/loader.svg"
+                alt="Loading..."
+                width={50}
+                height={50}
+              />
+              <p>Loading Conversation...</p>
+            </div>
+          ) : (
+            <List>
+              {messages.length > 1 ? (
+                messages.map((message, index) => (
+                  <ListItem key={index}>
+                    <Grid
+                      container
+                      spacing={2}
+                      justifyContent={
+                        message.type === "user" ? "flex-end" : "flex-start"
+                      }
                     >
-                      <ListItemText primary={message.text} />
-                    </Paper>
-                  </Grid>
-                </Grid>
-              </ListItem>
-            ))}
-            {loading && (
+                      <Grid item xs={12} sm={8}>
+                        <Paper
+                          style={{
+                            padding: "0.5rem 1rem",
+                            backgroundColor:
+                              message.type === "user" ? "#1976d2" : "#ece7e7",
+                            color: message.type === "user" ? "#ffffff" : "#000",
+                            borderRadius: "20px",
+                          }}
+                        >
+                          <ListItemText primary={message.text} />
+                        </Paper>
+                      </Grid>
+                    </Grid>
+                  </ListItem>
+                ))
+              ) : (
+                <div className="relative grid place-items-center h-full text-gray-400">
+                  Start a new conversation with Servbot
+                </div>
+              )}
+              {loading && (
                 <Box className="ml-20">
-                  <Image src='/loader.svg' alt="Loading..." width={40} height={40} />
+                  <Image
+                    src="/loader.svg"
+                    alt="Loading..."
+                    width={40}
+                    height={40}
+                  />
                 </Box>
               )}
-          </List>}
+            </List>
+          )}
         </Box>
         <Box display="flex">
           <TextField
