@@ -1,13 +1,21 @@
 import { NextResponse } from 'next/server';
-import { db } from '../../../lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../firebase';
+import { doc, getDoc,  } from 'firebase/firestore';
+import { getServerSession } from "next-auth";
+import { options } from "../auth/[...nextauth]/options";
 
-export default async function GET(req) {
+export async function GET(req) {
+  const session = await getServerSession({ req, options });
+
+  if(!session) {
+    return NextResponse.json({ success: false, error: 'User not authenticated' }, { status: 401 });
+  }
+
   try {
-    const { userId } = req.query;
-    const userDoc = doc(db, 'chats', userId);
+  
+    const userDoc = doc(db, 'chats', session.user.email);
     const userChat = await getDoc(userDoc);
-
+    
     if (userChat.exists()) {
         return NextResponse.json({ success: true, messages: userChat.data().messages }, { status: 200 });
     } else {

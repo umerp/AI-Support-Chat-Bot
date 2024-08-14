@@ -1,5 +1,5 @@
 import OpenAI from "openai/index.mjs";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { systemPrompt } from "./systemPrompt";
 
 const openai = new OpenAI({
@@ -7,7 +7,7 @@ const openai = new OpenAI({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY
 });
 
-export async function POST(req: NextRequest) {
+export async function POST(req) {
     
     const { message } = await req.json(); 
     console.log("Received message: ", message);

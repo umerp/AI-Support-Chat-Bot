@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
+import { raleway } from "../fonts";
 
 export default function Chatbox() {
   const { data: session } = useSession(); // Fetch session using useSession hook
@@ -27,23 +28,31 @@ export default function Chatbox() {
     const fetchChatHistory = async () => {
       if (session) {
         try {
-          const res = await axios.get(`/api/chat/history?userId=${session.user.id}`);
+          console.log("Fetching chat history...");
+          const res = await axios.get(`/api/fetchMessage`);
           setMessages(res.data.messages);
         } catch (error) {
           console.error("Error fetching chat history:", error);
         }
       }
     };
-
     fetchChatHistory();
   }, [session]);
 
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim()) {
-      setMessages([...messages, { text: input, type: "user" }]);
+      const newMessage = { text: input, type: "user", timestamp: Date.now() };
+      const newMessages = [...messages, newMessage];
+      setMessages(newMessages);
       setInput("");
 
+      try {
+        console.log("Saving message:", newMessage);
+        await axios.post("/api/saveMessage", { message: newMessage });
+      } catch (error) {
+        console.error("Error saving message:", error);
+      }
     }
   };
 
@@ -51,11 +60,13 @@ export default function Chatbox() {
     try {
       const lastUserMessage = messages[messages.length - 1]?.text; // grabbing the last user message text
       if (lastUserMessage) {
-        const res = await axios.post('/api/sendMessage', {
-          message: lastUserMessage,
-        });
+        console.log("Fetching response for message:", lastUserMessage);
+        // const res = await axios.post('/api/sendMessage', {
+        //   message: lastUserMessage,
+        // });
 
-        const botReply = res.data.reply;
+
+        const botReply = "Testing bot response..."; // replace with actual bot response
 
         // here i'm adding the bot reply to the messages state
         setMessages((prevMessages) => [
@@ -92,7 +103,7 @@ export default function Chatbox() {
         }}
       >
         <Typography
-          className=" text-black py-2 shadow-md bg-blue-50 rounded-t-lg"
+          className={`${raleway.className} text-black py-2 font-bold shadow-md bg-blue-50 rounded-t-lg`}
           variant="h5"
           align="center"
           gutterBottom
@@ -115,8 +126,8 @@ export default function Chatbox() {
                       style={{
                         padding: "0.5rem 1rem",
                         backgroundColor:
-                          message.type === "user" ? "#1976d2" : "#f5f5f5",
-                        color: message.type === "user" ? "#fff" : "#000",
+                          message.type === "user" ? "#1976d2" : "#ece7e7",
+                        color: message.type === "user" ? "#ffffff" : "#000",
                         borderRadius: "20px",
                       }}
                     >
