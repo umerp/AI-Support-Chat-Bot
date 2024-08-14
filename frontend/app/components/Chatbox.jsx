@@ -16,12 +16,15 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
 import { raleway } from "../fonts";
+import Image from "next/image";
+
 
 export default function Chatbox() {
-  const { data: session } = useSession(); // Fetch session using useSession hook
-
+  const { data: session } = useSession();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false); 
+  const [fetching, setFetching] = useState(true)
 
   // fetching chat history on render
   useEffect(() => {
@@ -29,15 +32,25 @@ export default function Chatbox() {
       if (session) {
         try {
           console.log("Fetching chat history...");
-          const res = await axios.get(`/api/fetchMessage`);
-          setMessages(res.data.messages);
+          const response = await axios.get(`/api/fetchMessage`);
+          setMessages(response.data.messages);
         } catch (error) {
           console.error("Error fetching chat history:", error);
         }
+        setFetching(false);
       }
     };
     fetchChatHistory();
   }, [session]);
+
+  const saveMessage = async (newMessage) => {
+    try {
+      console.log("Saving message:", newMessage);
+      await axios.post("/api/saveMessage", { message: newMessage });
+    } catch (error) {
+      console.error("Error saving message:", error);
+    }
+  }
 
 
   const handleSend = async () => {
@@ -47,33 +60,37 @@ export default function Chatbox() {
       setMessages(newMessages);
       setInput("");
 
-      try {
-        console.log("Saving message:", newMessage);
-        await axios.post("/api/saveMessage", { message: newMessage });
-      } catch (error) {
-        console.error("Error saving message:", error);
-      }
+      await saveMessage(newMessage);
+      setLoading(true);
+
+      const botResponse = await fetchBotResponse();
+      const botMessage = {
+        text: botResponse,
+        type: "bot",
+        timestamp: Date.now(),
+      };
+      console.log("Bot response:", botResponse);
+
+      const finalMessages = [...newMessages, botMessage];
+      setMessages(finalMessages);
+      setLoading(false);
+
+      await saveMessage(botMessage);
     }
   };
 
-  const fetchResponse = async () => {
+  const fetchBotResponse = async () => {
     try {
-      const lastUserMessage = messages[messages.length - 1]?.text; // grabbing the last user message text
+      const lastUserMessage = messages[messages.length - 2]?.text; // grabbing the last user message text
       if (lastUserMessage) {
         console.log("Fetching response for message:", lastUserMessage);
-        // const res = await axios.post('/api/sendMessage', {
-        //   message: lastUserMessage,
-        // });
+        const res = await axios.post('/api/sendMessage', {
+          message: lastUserMessage,
+        });
 
 
-        const botReply = "Testing bot response..."; // replace with actual bot response
-
-        // here i'm adding the bot reply to the messages state
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { text: botReply, type: "bot" },
-        ]);
-
+        const botReply = res.data.reply;
+        return botReply || "Sorry I couldn't process that."
       }
     } catch (error) {
       console.error("Error fetching response:", error);
@@ -83,7 +100,7 @@ export default function Chatbox() {
   useEffect(() => {
     // fetching response only if the last message is from the user. We don't want the bot to respond to itself
     if (messages.length && messages[messages.length - 1].type === "user") {
-      fetchResponse();
+      fetchBotResponse();
     }
   }, [messages]); // onlys runs useEffect if messages array changes
 
@@ -111,6 +128,12 @@ export default function Chatbox() {
           Chat with ServBot
         </Typography>
         <Box className='bg-gray-100 shadow-inner' style={{ flexGrow: 1, overflowY: "auto", marginBottom: "1rem" }}>
+          {fetching ? (
+              <div className="relative flex flex-col h-full justify-center items-center">
+                <Image src='/loader.svg' alt="Loading..." width={50} height={50} />
+                <p>Loading Conversation...</p>
+              </div>
+          ) : 
           <List>
             {messages.map((message, index) => (
               <ListItem key={index}>
@@ -137,7 +160,12 @@ export default function Chatbox() {
                 </Grid>
               </ListItem>
             ))}
-          </List>
+            {loading && (
+                <Box className="ml-20">
+                  <Image src='/loader.svg' alt="Loading..." width={40} height={40} />
+                </Box>
+              )}
+          </List>}
         </Box>
         <Box display="flex">
           <TextField
