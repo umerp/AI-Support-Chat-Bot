@@ -1,17 +1,22 @@
 import Navbar from "./components/Navbar";
-import ChatboxHeader from "./components/ChatboxHeader";
-import ChaboxBody from "./components/ChaboxBody";
+import ChaboxBody from "./components/Chatbox";
+import { options } from "./api/auth/[...nextauth]/options";
+import { getServerSession } from "next-auth/next";
 
-export default function Home() {
+
+export default async function Home() {
+  const session = await getServerSession(options);
+
   return (
-    <div className="flex h-screen items-center justify-center">
-      <Navbar />
-      <div className="flex h-96 w-full max-w-lg flex-col items-center justify-between  border-solid border-2 border-gray-500">
-        <ChatboxHeader />
-        
-        <ChaboxBody />
-
-      </div>
+    <div className="bg-gradient-to-b from-blue-200 flex h-screen items-center justify-center">
+      {session ? (
+        <>
+          <Navbar />
+          <ChaboxBody />
+        </>
+      ) : (
+        <h1 className="text-5xl">You Shall Not Pass!</h1>
+      )}
     </div>
   );
 }

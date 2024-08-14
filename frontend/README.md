@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ServBot AI
 
-## Getting Started
+## Description
+**ServBot AI** is a cutting-edge AI-powered support chatbot tailored for B2B solutions. Leveraging the power of OpenAI's natural language processing capabilities, ServBot AI provides businesses with an intelligent, responsive, and customizable support solution that can handle customer inquiries, automate tasks, and provide real-time assistance. Whether it's for customer service, IT support, or any other business function, ServBot AI is designed to integrate seamlessly into your existing workflows, ensuring that your customers and teams receive the support they need when they need it.
 
-First, run the development server:
+## Objective
+- Enhance Support Efficiency: Automate routine support tasks to reduce response times and improve overall efficiency.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Improve Customer Satisfaction: Provide intelligent, real-time assistance to customers, ensuring they receive accurate and timely support.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Optimize Resource Allocation: Free up human resources by delegating repetitive tasks to the AI chatbot, allowing teams to focus on more complex and strategic work.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- Ensure Scalability: Build a solution that grows with your business, easily handling increased demand without compromising performance.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Seamless Integration: Integrate effortlessly into existing business workflows, providing a flexible and customizable support tool for various business functions.
 
-## Learn More
+- Leverage Advanced AI: Utilize cutting-edge natural language processing from OpenAI to deliver context-aware and human-like responses.
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
+- Frontend: Next.js, Tailwind CSS
+- Backend: Node.js, OpenAI
+- Cloud: AWS (Amazon Web Services)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## How to run locally
+1. navigate to respective front/back end folders
+2. run `npm install` to install dependencies
+3. to run frontend: `npm run dev`
+4. to fun backend: `node server`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
