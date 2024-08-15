@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import Logo from "./Logo";
-import { Menu, MenuItem, IconButton, AvatarIcon } from "@mui/material";
-import LogoutIcon from '@mui/icons-material/Logout';
+import { Menu, MenuItem, IconButton, Avatar } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 function Navbar() {
   const { data: session, status } = useSession();
@@ -28,14 +28,14 @@ function Navbar() {
       <div className="absolute top-0 flex justify-between h-20 bg-blue-200 shadow-md w-full">
         <Logo />
         <div className="h-20 flex items-center justify-center">
-          <Image src='/loader' width={20} height={20} alt="...Loading"/>
+          <Image src="/loader.png" width={20} height={20} alt="...Loading" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="absolute top-0 flex justify-between h-20 bg-blue-200 shadow-md w-full ">
+    <div className="absolute top-0 flex justify-between h-20 bg-blue-200 shadow-md w-full">
       <Logo />
       {session?.user?.image ? (
         <div>
@@ -61,13 +61,13 @@ function Navbar() {
               horizontal: "right",
             }}
           >
-            <MenuItem onClick={handleLogout}>Logout <span className='ml-10'><LogoutIcon /></span></MenuItem>
-            </Menu>
+            <MenuItem onClick={handleLogout}>
+              Logout <span className="ml-10"><LogoutIcon /></span>
+            </MenuItem>
+          </Menu>
         </div>
       ) : (
-        <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
-          <AvatarIcon/>
-        </div>
+        <Avatar className="w-12 h-12 bg-gray-300" />
       )}
     </div>
   );

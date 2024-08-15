@@ -10,8 +10,8 @@ export const options: NextAuthOptions = {
             clientSecret: process.env.GOOGLE_SECRET_KEY as string,
           }),
         GitHubProvider({
-                clientId: process.env.GITHUB_ID as string,
-                clientSecret: process.env.GITHUB_SECRET as string,
+            clientId: process.env.GITHUB_ID as string,
+            clientSecret: process.env.GITHUB_SECRET as string,
         }),
         CredentialsProvider({
             name: "Credentials",
@@ -27,8 +27,9 @@ export const options: NextAuthOptions = {
                     placeholder: "your-password"
                 }
             },
-            async authorize(credentials){
-                const user = { id: "678", name: "Huz", password: "headstarter"}
+            async authorize(credentials) {
+                // Adding email to the user object
+                const user = { id: "678", name: "Huz", password: "headstarter", email: "huzya2929@gmail.com" }
 
                 if (credentials?.username === user.name && credentials?.password === user.password) {
                     return user
@@ -38,4 +39,18 @@ export const options: NextAuthOptions = {
             }
         })
     ],
+    callbacks: {
+        async session({ session, token }) {
+            if (token?.email) {
+                session.user.email = token.email;
+            }
+            return session;
+        },
+        async jwt({ token, user }) {
+            if (user) {
+                token.email = user.email;
+            }
+            return token;
+        },
+    },
 }

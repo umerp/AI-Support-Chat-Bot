@@ -1,5 +1,5 @@
-import Navbar from "./components/Navbar";
-import ChaboxBody from "./components/Chatbox";
+import  Navbar  from "./components/Navbar";
+import  Chatbox from "./components/Chatbox";
 import { options } from "./api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth/next";
 
@@ -12,7 +12,7 @@ export default async function Home() {
       {session ? (
         <>
           <Navbar />
-          <ChaboxBody />
+          <Chatbox />
         </>
       ) : (
         <h1 className="text-5xl">You Shall Not Pass!</h1>
